@@ -37,29 +37,28 @@ public class ProductService : IProductService
          await _productRepository.AddProduct(product);
     }
 
-    public async Task UpdateProduct(Product product)
+    public async Task<Product> UpdateProduct(Product product)
     {
         // Validate product attributes before updating
         if (string.IsNullOrWhiteSpace(product.Name) || product.Price <= 0 || product.Quantity < 0)
         {
             throw new ArgumentException("Invalid product attributes.");
         }
-
-        await _productRepository.UpdateProduct(product);
+        var category = await _categoryRepository.GetById(product.CategoryId);
+        if (category == null)
+        {
+            throw new ArgumentException("Category not exist");
+        }
+        return await _productRepository.UpdateProduct(product);
     }
 
     public async Task DeleteProduct(Guid id)
     {
-        var productToDelete =  _productRepository.GetProductById(id);
-        if (productToDelete != null)
+        var productToDelete =await  _productRepository.GetProductById(id);
+        if (productToDelete == null)
         {
-            await _productRepository.DeleteProduct(id);
+            throw new ArgumentException("Customer does not exist.");
         }
-        else
-        {
-            throw new ArgumentException("Product does not exist.");
-        }
+        await _productRepository.DeleteProduct(id);
     }
-
-
 }

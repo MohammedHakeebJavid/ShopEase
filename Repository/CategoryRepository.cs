@@ -1,4 +1,5 @@
-﻿using ShopEase.Repository.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using ShopEase.Repository.Interface;
 
 public class CategoryRepository : ICategoryRepository
 {
@@ -21,7 +22,7 @@ public class CategoryRepository : ICategoryRepository
         await Task.CompletedTask;
     }
 
-    public async Task Update(Category entity)
+    public async Task<ActionResult<Category>> Update(Category entity)
     {
         var existingCategory = await GetById(entity.Id);
         if (existingCategory != null)
@@ -29,7 +30,7 @@ public class CategoryRepository : ICategoryRepository
             existingCategory.Name = entity.Name;
             existingCategory.Description = entity.Description;
         }
-        await Task.CompletedTask;
+        return existingCategory;
     }
 
     public async Task Delete(Guid id)
@@ -40,10 +41,5 @@ public class CategoryRepository : ICategoryRepository
             _categories.Remove(categoryToRemove);
         }
         await Task.CompletedTask;
-    }
-
-    public async Task<IEnumerable<Category>> Search(Func<Category, bool> predicate)
-    {
-        return await Task.FromResult(_categories.Where(predicate));
     }
 }

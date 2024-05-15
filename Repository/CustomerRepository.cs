@@ -1,4 +1,5 @@
-﻿using ShopEase.Repository.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using ShopEase.Repository.Interface;
 
 public class CustomerRepository : ICustomerRepository
 {
@@ -21,7 +22,7 @@ public class CustomerRepository : ICustomerRepository
         await Task.CompletedTask;
     }
 
-    public async Task Update(Customer entity)
+    public async Task<ActionResult<Customer>> Update(Customer entity)
     {
         var existingCustomer = await GetById(entity.Id);
         if (existingCustomer != null)
@@ -31,7 +32,7 @@ public class CustomerRepository : ICustomerRepository
             existingCustomer.Address = entity.Address;
             existingCustomer.ContactNumber = entity.ContactNumber;
         }
-        await Task.CompletedTask;
+        return existingCustomer;
     }
 
     public async Task Delete(Guid id)
@@ -42,10 +43,5 @@ public class CustomerRepository : ICustomerRepository
             _customers.Remove(customerToRemove);
         }
         await Task.CompletedTask;
-    }
-
-    public async Task<IEnumerable<Customer>> Search(Func<Customer, bool> predicate)
-    {
-        return await Task.FromResult(_customers.Where(predicate));
     }
 }

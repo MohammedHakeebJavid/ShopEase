@@ -21,7 +21,7 @@ public class ProductRepository : IProductRepository
         await Task.CompletedTask;
     }
 
-    public async Task UpdateProduct(Product product)
+    public async Task<Product> UpdateProduct(Product product)
     {
         var existingItem = _products.FirstOrDefault(i => i.Id == product.Id);
         if (existingItem != null)
@@ -29,12 +29,12 @@ public class ProductRepository : IProductRepository
             existingItem.Name = product.Name;
             existingItem.Price = product.Price;
         }
-        await Task.CompletedTask;
+        return existingItem;
     }
 
     public async Task DeleteProduct(Guid id)
     {
-        var itemToRemove = _products.FirstOrDefault(i => i.Id == id);
+        var itemToRemove = await GetProductById(id);
         if (itemToRemove != null)
         {
             _products.Remove(itemToRemove);

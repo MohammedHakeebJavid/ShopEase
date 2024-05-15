@@ -44,8 +44,7 @@ public class ProductsController : ControllerBase
         {
             return BadRequest();
         }
-        await _productService.UpdateProduct(product);
-        return NoContent();
+        return await _productService.UpdateProduct(product);
     }
 
     [HttpDelete("{id}")]

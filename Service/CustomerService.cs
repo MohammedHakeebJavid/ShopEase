@@ -1,4 +1,5 @@
-﻿using ShopEase.Repository.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using ShopEase.Repository.Interface;
 using ShopEase.Service.Interface;
 
 public class CustomerService : ICustomerService
@@ -31,7 +32,7 @@ public class CustomerService : ICustomerService
         await _customerRepository.Add(customer);
     }
 
-    public async Task UpdateCustomer(Customer customer)
+    public async Task<ActionResult<Customer>> UpdateCustomer(Customer customer)
     {
         // Validate customer attributes before updating
         if (string.IsNullOrWhiteSpace(customer.Name) || string.IsNullOrWhiteSpace(customer.Email))
@@ -39,7 +40,7 @@ public class CustomerService : ICustomerService
             throw new ArgumentException("Customer name and email must not be empty.");
         }
 
-        await _customerRepository.Update(customer);
+        return await _customerRepository.Update(customer);
     }
 
     public async Task DeleteCustomer(Guid id)

@@ -44,8 +44,7 @@ public class CustomersController : ControllerBase
         {
             return BadRequest();
         }
-        await _customerService.UpdateCustomer(customer);
-        return NoContent();
+        return await _customerService.UpdateCustomer(customer);
     }
 
     [HttpDelete("{id}")]

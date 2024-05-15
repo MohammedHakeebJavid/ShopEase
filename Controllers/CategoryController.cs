@@ -43,8 +43,7 @@ public class CategoryController : ControllerBase
         {
             return BadRequest();
         }
-        await _categoryService.UpdateCategory(category);
-        return NoContent();
+        return await _categoryService.UpdateCategory(category);
     }
 
     [HttpDelete("{id}")]

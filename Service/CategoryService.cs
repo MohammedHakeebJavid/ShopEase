@@ -1,4 +1,5 @@
-﻿using ShopEase.Repository.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using ShopEase.Repository.Interface;
 
 public class CategoryService : ICategoryService
 {
@@ -29,14 +30,14 @@ public class CategoryService : ICategoryService
         await _categoryRepository.Add(category);
     }
 
-    public async Task UpdateCategory(Category category)
+    public async Task<ActionResult<Category>> UpdateCategory(Category category)
     {
         if (string.IsNullOrWhiteSpace(category.Name))
         {
             throw new ArgumentException("Category name must not be empty.");
         }
 
-        await _categoryRepository.Update(category);
+        return await _categoryRepository.Update(category);
     }
 
     public async Task DeleteCategory(Guid id)
