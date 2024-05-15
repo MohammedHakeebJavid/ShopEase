@@ -4,10 +4,12 @@ using ShopEase.Service.Interface;
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository)
     {
         _productRepository = productRepository;
+        _categoryRepository= categoryRepository;
     }
 
     public async Task<IEnumerable<Product>> GetAllProducts()
@@ -27,7 +29,11 @@ public class ProductService : IProductService
         {
             throw new ArgumentException("Invalid product attributes.");
         }
-
+        var category=await _categoryRepository.GetById(product.CategoryId);
+        if (category==null)
+        {
+            throw new ArgumentException("Category not exist");
+        }
          await _productRepository.AddProduct(product);
     }
 
